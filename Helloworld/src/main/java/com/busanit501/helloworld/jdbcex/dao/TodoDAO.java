@@ -1,10 +1,30 @@
 package com.busanit501.helloworld.jdbcex.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import com.busanit501.helloworld.jdbcex.dto.TodoVO;
+import lombok.Cleanup;
+
+import java.sql.*;
 
 public class TodoDAO {
+
+    //Todo 등록기능 추가하기
+    //VO(Value Objcct, 실제 디비 컬럼과 일치)
+    //서비스 계층에서 VO넘겨받은 데이터중에서 보여줄 데이터만 따로 분리해서
+    //전달하는 용도로 사용하는 DTO입니다
+    public void insert(TodoVO todoVO) throws SQLException {
+
+
+        String sql = "insert into tbl_todo (title, dueDate, finished)" +
+                "values (?, ?, ?)";
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, todoVO.getTitle());
+        preparedStatement.setDate(2, Date.valueOf(todoVO.getDueDate()));
+        preparedStatement.setBoolean(3,todoVO.isFinished());
+        preparedStatement.executeUpdate();
+
+    } //insert
+
 
     public String getTime() {
         String now = null;
@@ -31,6 +51,19 @@ public class TodoDAO {
         } //catch
         return now;
     } //getTime
+
+    public String getTime2() throws SQLException {
+        String now = null;
+        // 자동으로 디비의 connection 반납하는 방법2
+        // @Cleanup
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("select now()");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        now = resultSet.getString(1);
+        return now;
+    }
 
 
 } //class
