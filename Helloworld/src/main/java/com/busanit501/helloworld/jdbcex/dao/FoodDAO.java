@@ -15,7 +15,7 @@ public class FoodDAO {
     public void insert(FoodVO foodVO) throws SQLException {
 
 
-        String sql = "insert into tbl_todo (title, dueDate, finished)" +
+        String sql = "insert into food_menu (title, dueDate, finished)" +
                 "values (?, ?, ?)";
         @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);

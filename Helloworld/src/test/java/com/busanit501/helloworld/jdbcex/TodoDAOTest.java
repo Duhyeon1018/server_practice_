@@ -43,7 +43,7 @@ public class TodoDAOTest {
         //롬복에서 지원해주는 기능이라서 @Builder, TodoBO에 클래스 선언부에 작성
         TodoVO todoVO1 = TodoVO.builder()
                 .title("샘플 디비 작성 테스트")
-                        .dueDate(LocalDate.of(2024, 12, 31))
+                        .dueDate(LocalDate.now())
                 .build();
 
         todoDAO.insert(todoVO1);
