@@ -1,8 +1,6 @@
 package com.busanit501.helloworld.food.controller;
 
 
-//import com.busanit501.helloworld.food.service.FoodService;
-import com.busanit501.helloworld.food.dto.FoodDTO;
 import com.busanit501.helloworld.todo.dto.TodoDTO;
 import com.busanit501.helloworld.todo.service.TodoService;
 
@@ -22,11 +20,11 @@ public class FoodReadController extends HttpServlet {
         //클릭한 게시글 번호를 가져와야함
         Long tno = Long.parseLong(request.getParameter("tno"));
         //서비스에서 하나의 todo 더미데이터를 조회 후에
-//        FoodDTO FoodDTO = FoodService.INSTANCE.getOne(5L);
+        TodoDTO todoDTO =TodoService.INSTANCE.getOne(5L);
 
         //화면에 전달하기
-//        request.setAttribute("dto",FoodDTO);
-        request.getRequestDispatcher("/WEB-INF/food/foodRead.jsp")
+        request.setAttribute("dto",todoDTO);
+        request.getRequestDispatcher("/WEB-INF/todo/todoRead.jsp")
                 .forward(request, response);
 
     }
