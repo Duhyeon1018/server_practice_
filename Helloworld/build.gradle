@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.busanit501'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.10.2'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    //jstl 추가,
+    // https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl
+    // 구버전
+//    implementation 'javax.servlet.jsp.jstl:jstl:1.2'
+    implementation group: 'jstl', name: 'jstl', version: '1.2'
+    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.5.1'
+//롬복 라이브러리 설치
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.36'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.36'
+
+    // test, 단위 테스트에서도, 사용하기.
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.36'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.36'
+
+    //Hikari Cp 설치
+    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '6.2.1'
+
+
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
