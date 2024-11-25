@@ -63,10 +63,36 @@ public class TodoDAOTest {
     //3, 하나 조회 테스트
     @Test
     public void getOneTest() throws SQLException {
-       Long tno = 3L;
-       TodoVO todoVO = todoDAO.selectOne(tno);
-       System.out.println(todoVO);
+        Long tno = 3L;
+        TodoVO todoVO = todoDAO.selectOne(tno);
+        System.out.println(todoVO);
     }
 
-}// class
+    //4, 삭제테스트
+    @Test
+    public void deleteTest() throws SQLException {
+        Long tno = 1L;
+        todoDAO.deleteTodo(tno);
+
+
+    }
+
+    //5, 수정테스트
+    @Test
+    public void updateTest() throws SQLException {
+        //실제 작업은 내용을 화면에서 받아옴, 그치만 못하지만
+        //화면에서 받아오는 대신 하드코딩으로 값을 더미로 테스트 진행
+        TodoVO todoVO = TodoVO.builder()
+                .tno(3L)
+                .title("수정 테스트 중")
+                .finished(true)
+                .dueDate(LocalDate.of(2024, 12, 25))
+                .build();
+                todoDAO.updateOne(todoVO);
+
+
+
+
+    }
+}
 

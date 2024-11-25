@@ -71,6 +71,39 @@ public class FoodDAO {
         return foodVO;
     }
 
+    //수정
+    // update,
+    //화면에서 낱개로 넘어온 데이터는 DTO담아서 전달
+    //서비스 계층에서 DTO -> VO(Value Object) 데이터베이스와 직접적인 연관
+    //예시, VO클래스는 테이블과 컬럼이 동일
+    //에시, DTO화면(출력에서 보여주고, 전달하고 싶은것만 골라서 사용할 수 있음)
+    //화면에서 받아와서 테스트는 더미데이터 확인
+    public void updateOne(FoodVO foodVO) throws SQLException {
+        String sql = " update food_menu set title=?, dueDate=?, finished=?" +
+                " where tno = ?";
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        //화면에서 넘겨받은 변경할 데이터를 DTO ->VO 변환후에(서비스에서 할 예정.)
+        //VO에서 꺼내서 DB로 연결하는 과정
+        preparedStatement.setString(1, foodVO.getTitle());
+        preparedStatement.setDate(2, Date.valueOf(foodVO.getDueDate()));
+        preparedStatement.setBoolean(3, foodVO.isFinished());
+        preparedStatement.setLong(4,foodVO.getTno() );
+        preparedStatement.executeUpdate();
+    }
+
+    //삭제.
+    // delete,
+    public void deleteFood(Long tno) throws SQLException {
+        String sql = "delete from food_menu where tno = ?";
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection(); //연결하는거
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql); //일을 시키는게 prepare statement
+        preparedStatement.setLong(1, tno); // 위에 tno =? << 이쪽에 넣는것이고, tno는 사실상 화면에서 받아오는거
+        preparedStatement.executeUpdate(); //반영 exectute queary << 조회임
+    }
+
+    /// //////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     public String getTime() {
         String now = null;
