@@ -2,9 +2,12 @@ package com.busanit501.helloworld.food.dao;
 
 import com.busanit501.helloworld.jdbcex.dao.ConnectionUtil;
 import com.busanit501.helloworld.food.VO.FoodVO;
+import com.busanit501.helloworld.jdbcex.vo.TodoVO;
 import lombok.Cleanup;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FoodDAO {
 
@@ -25,6 +28,48 @@ public class FoodDAO {
         preparedStatement.executeUpdate();
 
     } //insert
+
+    //2
+    // select , DB에서 전체 조회.
+    public List<FoodVO> selectAll() throws SQLException {
+        String sql = "select * from food_menu";
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
+        // 넘어온 데이터를 임시로 보관할 리스트 인스턴스 만들고,
+        // 반복문 통해서, 넘어온 각행을 리스트에 요소로 하나씩 담기.
+        List<FoodVO> list = new ArrayList<>();
+        while (resultSet.next()) {
+            FoodVO foodVO = FoodVO.builder()
+                    .tno(resultSet.getLong("tno"))
+                    .title(resultSet.getString("title"))
+                    .dueDate(resultSet.getDate("dueDate").toLocalDate())
+                    .finished(resultSet.getBoolean("finished"))
+                    .build();
+            list.add(foodVO);
+        }
+        return list;
+    }
+
+    //3, 하나 조회. 상세보기.
+    public FoodVO selectOne(Long tno) throws SQLException {
+        String sql = "select * from food_menu where tno = ?";
+        @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
+        @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setLong(1, tno);
+        // 하나만 받아온 상태,
+        @Cleanup ResultSet resultSet = preparedStatement.executeQuery();
+        // 임시 TotoVO , 인스턴스 만들어서, 한행의 각 컬럼 4개를 담기.
+        // 0행에서 -> 1행으로 조회를 해야하는데, 요게 누락됨.
+        resultSet.next();
+        FoodVO foodVO = FoodVO.builder()
+                .tno(resultSet.getLong("tno"))
+                .title(resultSet.getString("title"))
+                .dueDate(resultSet.getDate("dueDate").toLocalDate())
+                .finished(resultSet.getBoolean("finished"))
+                .build();
+        return foodVO;
+    }
 
 
     public String getTime() {
