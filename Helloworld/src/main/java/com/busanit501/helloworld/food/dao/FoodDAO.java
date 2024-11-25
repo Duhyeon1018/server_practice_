@@ -89,7 +89,8 @@ public class FoodDAO {
         preparedStatement.setDate(2, Date.valueOf(foodVO.getDueDate()));
         preparedStatement.setBoolean(3, foodVO.isFinished());
         preparedStatement.setLong(4,foodVO.getTno() );
-        preparedStatement.executeUpdate();
+        preparedStatement.executeUpdate(); //처음에 테스트에서는 문제없지만 DB단에서 수정이 안되는 문제가 발생 -> 찾아본 결과
+        // preparedStatement.executeUpdate << 이 코드를 빼먹었기 때문에 테스트에는 아무 문제 없었지만 DB단에서 수정이 안된 것.
     }
 
     //삭제.
