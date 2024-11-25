@@ -1,7 +1,7 @@
-package com.busanit501.helloworld.jdbcex.dao;
+package com.busanit501.helloworld.food.dao;
 
-import com.busanit501.helloworld.jdbcex.dto.FoodVO;
-import com.busanit501.helloworld.jdbcex.dto.TodoVO;
+import com.busanit501.helloworld.jdbcex.dao.ConnectionUtil;
+import com.busanit501.helloworld.food.VO.FoodVO;
 import lombok.Cleanup;
 
 import java.sql.*;

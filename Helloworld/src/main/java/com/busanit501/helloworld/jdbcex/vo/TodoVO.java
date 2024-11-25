@@ -1,6 +1,7 @@
-package com.busanit501.helloworld.jdbcex.dto;
+package com.busanit501.helloworld.jdbcex.vo;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDate;
 
