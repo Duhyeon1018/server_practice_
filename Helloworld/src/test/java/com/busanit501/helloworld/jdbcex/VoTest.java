@@ -1,4 +1,4 @@
-package com.busanit501.helloworld.dao.jdbcex;
+package com.busanit501.helloworld.jdbcex;
 
 import org.junit.jupiter.api.Test;
 

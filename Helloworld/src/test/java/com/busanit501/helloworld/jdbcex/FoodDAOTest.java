@@ -1,4 +1,4 @@
-package com.busanit501.helloworld.dao.jdbcex;
+package com.busanit501.helloworld.jdbcex;
 
 import com.busanit501.helloworld.food.VO.FoodVO;
 import com.busanit501.helloworld.food.dao.FoodDAO;

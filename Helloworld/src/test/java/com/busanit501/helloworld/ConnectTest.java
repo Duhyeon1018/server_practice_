@@ -1,4 +1,4 @@
-package com.busanit501.helloworld.dao;
+package com.busanit501.helloworld;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

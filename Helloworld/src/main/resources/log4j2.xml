@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--자바기반의 로깅 프레임워크-->
+<!--        Appenders 설정은 출력대상을 정의하는 곳-->
+<!--예시, 1)콘솔 2)파일 3) 데이터베이스에 기록에 가능-->
+<!--예시, 1) 지금 우리는 콘솔을 예로 하는중임-->
+
+<!--PatternLayout = -->
+<!--        예시)콘솔에 출력하는 메세지 형식 포맷-->
+<!--        %d{HH:mm:ss.SSS} -> 시간 분 초 기록하는것-->
+<!--        [%t] -> 어떤 스레드에서 동작하는지 예시) [main] 이런식으로 표기-->
+<!--        %-5level -> 로그레벨 표기하는 것인데 다섯글자 왼쪽정렬, 예시) [INFO],[WARN] 이런식으로 표기-->
+<!--        %logger{36} -> 패키지명을 기록-->
+<!--        %msg -> 출력 메세지를 기록-->
+<!--        %n -> 줄넘김-->
+
+
+<Configuration status="WARN">
+    <Appenders>
+<!--     1)   출력대상이 콘솔-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}-%msg%n"/>
+
+        </Console>
+
+<!--      2)  출력대상을 파일-->
+        <File name ="FileAppender" fileName="logs/eroor.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}-%msg%n"/>
+        </File>
+
+    </Appenders>
+    <Loggers>
+<!--        추가부분-->
+<!--        특정 패키지 명으로 설정도 가능하긴함-->
+        <Logger name ="com.busanit501" level="debug" additivity="false">
+            <AppenderRef ref="FileAppender" level="info"/>
+            <AppenderRef ref="Console" level="info"/>
+        </Logger>
+
+<!--        전체설정이고 기본적으로 INFO 이상일때만 로그를 출력하게 설정-->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
