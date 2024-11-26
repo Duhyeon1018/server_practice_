@@ -4,11 +4,12 @@ import com.busanit501.helloworld.jdbcex.dao.TodoDAO;
 import com.busanit501.helloworld.jdbcex.dto.TodoDTO;
 import com.busanit501.helloworld.jdbcex.util.MapperUtil;
 import com.busanit501.helloworld.jdbcex.vo.TodoVO;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //설정1
 @Log4j2
@@ -22,7 +23,7 @@ public enum TodoService {
     private ModelMapper modelMapper;
 
     //생성자 이용해서 초기화 하기
-    TodoService(){
+    TodoService() {
         todoDAO = new TodoDAO();
         modelMapper = MapperUtil.INSTANCE.get();
     }
@@ -34,7 +35,7 @@ public enum TodoService {
 
     //1 register(등록)
     //화면에서 등록된 내용이 -> DTO 박스에 담아서 -> 서비스계층에 전달
-    public void register (TodoDTO todoDTO) throws SQLException {
+    public void register(TodoDTO todoDTO) throws SQLException {
         // DAO에서 작업할 때, DB에 직접적인 영향을 주는 객체를 만들었음
         // 그것이 바로 VO , 실제 비즈니스 로직에서만 사용
         // Servlet -> DTO 전달 받은 다음 -> DAO에 전달할 때, 다시 VO로 변환해야함
@@ -47,7 +48,7 @@ public enum TodoService {
 //        todoVO.setFinished(todoDTO.isFinished()); 이렇게 하나하나 다 써야함
 
         //그치만 모델매퍼 사용시
-        TodoVO todoVO = modelMapper.map(todoDTO,TodoVO.class); // todoDTO와 TodoVO를 일치 시켜주는거임= 코드 간결화 및 가독성
+        TodoVO todoVO = modelMapper.map(todoDTO, TodoVO.class); // todoDTO와 TodoVO를 일치 시켜주는거임= 코드 간결화 및 가독성
         //기존 로깅기록 출력
         //System.out.println("todoVO :" + todoVO);
         log.info("todoVO :" + todoVO);
@@ -55,5 +56,28 @@ public enum TodoService {
         //DAO에 외주 맡기기
         todoDAO.insert(todoVO);
 
+    } //register
+
+    // 전체 조회
+    public List<TodoDTO> listAll() throws SQLException {
+        List<TodoVO> voList = todoDAO.selectAll();
+        log.info("voList : " + voList);
+
+        // Stream 병렬 처리 안하면, 이런식으로 작업을 함.
+//        List<TodoDTO> dtoList2 = new ArrayList<>();
+//        for (TodoVO todoVo : voList) {
+//            TodoDTO todoDTO = new TodoDTO();
+//            todoDTO.setTno(todoVo.getTno());
+//            todoDTO.setTitle(todoVo.getTitle());
+//            todoDTO.setDueDate(todoVo.getDueDate());
+//            todoDTO.setFinished(todoVo.isFinished());
+//            dtoList2.add(todoDTO);
+//        }
+
+        // 병렬 처리를 하면, 똑같은 기능인데, 코드가 간결해짐.
+        // 화면에 전달 할 때, VO -> DTO 변환.
+        List<TodoDTO> dtoList = voList.stream().map(vo -> modelMapper.map(vo, TodoDTO.class))
+                .collect(Collectors.toList());
+        return dtoList;
     }
 }

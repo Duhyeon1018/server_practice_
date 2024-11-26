@@ -32,7 +32,7 @@
 <!--        추가부분-->
 <!--        특정 패키지 명으로 설정도 가능하긴함-->
         <Logger name ="com.busanit501" level="debug" additivity="false">
-            <AppenderRef ref="FileAppender" level="info"/>
+            <AppenderRef ref="FileAppender" level="error"/>
             <AppenderRef ref="Console" level="info"/>
         </Logger>
 
