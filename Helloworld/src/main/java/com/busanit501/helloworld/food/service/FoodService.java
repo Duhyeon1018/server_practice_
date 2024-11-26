@@ -1,64 +1,73 @@
 package com.busanit501.helloworld.food.service;
 
-import com.busanit501.helloworld.todo.dto.TodoDTO;
+import com.busanit501.helloworld.food.VO.FoodVO;
+import com.busanit501.helloworld.food.dao.FoodDAO;
+import com.busanit501.helloworld.food.dto.FoodDTO;
+import com.busanit501.helloworld.jdbcex.dao.TodoDAO;
+import com.busanit501.helloworld.jdbcex.dto.TodoDTO;
+import com.busanit501.helloworld.jdbcex.util.MapperUtil;
+import com.busanit501.helloworld.jdbcex.vo.TodoVO;
+import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 
-import java.time.LocalDate;
-import java.util.AbstractList;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-//열거형 상수들,
-//상수들의 집합, 모음집
+//설정1
+@Log4j2
 public enum FoodService {
     INSTANCE;
+    //두가지가 필요한데 다른 클래스에 의존함
+    //1) 모델매퍼 기능에 의존
+    //2) DAo 기능에 의존
 
-    // 글 등록하는 기능.
-    public void register(TodoDTO todoDTO) {
-        // 디비에 데이터를 쓰는 작업, insert
-        System.out.println("글쓰기 작업하는 기능입니다.");
+    private FoodDAO foodDAO;
+    private ModelMapper modelMapper;
+
+    //생성자 이용해서 초기화 하기
+    FoodService() {
+        foodDAO = new FoodDAO();
+        modelMapper = MapperUtil.INSTANCE.get();
     }
-    // 조회, 샘플, 하드코딩, 더미 데이터
-    public List<TodoDTO> getList() {
-        // 디비에서 데이터를 조회해서, 전달하기.
-        // for 문으로 10개의 더미 인스턴스 만들었다.라고 생각하기.
-        // 모양만 다름.
-        // Stream 객체, 입력 , 출력 한번에 처리하는 기능을 인터페이스, 클래스,
-//        List<TodoDTO> todoList2 = new ArrayList<>();
+
+    //crud 기본 테스트
+    //직접적인 디비 비즈니스로직은 DAO에 전부 다 있기 때문에
+    //여기서는 기능 명세서(모음집)
+    //DAO에 의존해서 이용하기
+
+    //1 register(등록)
+    //화면에서 등록된 내용이 -> DTO 박스에 담아서 -> 서비스계층에 전달
+    public void register(TodoDTO todoDTO) throws SQLException {
+        // DAO에서 작업할 때, DB에 직접적인 영향을 주는 객체를 만들었음
+        // 그것이 바로 VO , 실제 비즈니스 로직에서만 사용
+        // Servlet -> DTO 전달 받은 다음 -> DAO에 전달할 때, 다시 VO로 변환해야함
+        // 변환하는 도구
+        // 도구를 사요하지 않으면
+//        TodoVO todoVO = new TodoVO();
+//        todoVO.setTno(todoDTO.getTno());
+//        todoVO.setTitle(todoDTO.getTitle());
+//        todoVO.setDueDate(todoDTO.getDueDate());
+//        todoVO.setFinished(todoDTO.isFinished()); 이렇게 하나하나 다 써야함
+
+        //그치만 모델매퍼 사용시
+//        TodoVO todoVO = modelMapper.map(todoDTO, TodoVO.class); // todoDTO와 TodoVO를 일치 시켜주는거임= 코드 간결화 및 가독성
+//        //기존 로깅기록 출력
+//        //System.out.println("todoVO :" + todoVO);
+//        log.info("todoVO :" + todoVO);
 //
-//        for (int i=0; i<10; i++) {
-//            TodoDTO todoDTO = new TodoDTO();
-//            todoDTO.setTitle("테스트 " + i);
-//            todoDTO.setTno((long) i);
-//            todoDTO.setDueDate(LocalDate.now());
-//            todoList2.add(todoDTO);
-//        }
-        List<TodoDTO> todoList = IntStream.range(0,10).mapToObj(
-                i -> {
-                    // 10 반복 해서, 더미 인스턴스 10개 생성,
-                    TodoDTO todoDTO = new TodoDTO();
-                    todoDTO.setTitle("테스트 " + i);
-                    todoDTO.setTno((long) i);
-                    todoDTO.setDueDate(LocalDate.now());
-                    return  todoDTO;
-                }).collect(Collectors.toList());
-        return todoList;
-    }
+//        //DAO에 외주 맡기기
+//        foodDAO.insert(foodVO);
 
-    //하나조회, 상세보기 , 게시글에서 게시글 번호 클릭시 나타나는 데이터
-    public TodoDTO getOne(Long tno){
-        //실제로는 DB에서 실제 데이터를 받아와야 하지만
-        //더미데이터 활용
-        TodoDTO todoDTO = new TodoDTO();
-        todoDTO.setTno(5L);
-        todoDTO.setTitle("하나 조회 더미데이터");
-        todoDTO.setDueDate(LocalDate.now());
-        return todoDTO;
-    }
+    } //register
 
+    // 전체 조회
+    public List<FoodDTO> listAll() throws SQLException {
+        List<FoodVO> voList = foodDAO.selectAll();
+        log.info("voList : " + voList);
+
+        List<FoodDTO> foodList = voList.stream().map(vo -> modelMapper.map(vo, FoodDTO.class))
+                .collect(Collectors.toList());
+        return foodList;
+    }
 }
-
-
-// 예시, TodoService.INSTANCe
-// private final String str = "test";

@@ -1,6 +1,9 @@
 package com.busanit501.helloworld.food.dto;
 
+import lombok.Builder;
+
 import java.time.LocalDate;
+@Builder
 
 public class FoodDTO {
     private Long tno;

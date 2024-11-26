@@ -31,7 +31,7 @@ public class FoodDAO {
 
     //2
     // select , DB에서 전체 조회.
-    public List<FoodVO> selectAll() throws SQLException {
+    public static List<FoodVO> selectAll() throws SQLException {
         String sql = "select * from food_menu";
         @Cleanup Connection connection = ConnectionUtil.INSTANCE.getConnection();
         @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sql);
