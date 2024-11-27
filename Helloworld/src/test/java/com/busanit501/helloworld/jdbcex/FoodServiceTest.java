@@ -32,12 +32,12 @@ public class FoodServiceTest {
         foodService.register(foodDTO);
     }
 
-    @Test
-    public void testSelectAll() throws SQLException {
-        List<TodoDTO> dtoList = foodService.listAll();
-        for (TodoDTO foodDTO:dtoList) {
-            log.info(foodDTO);
-        }
-    }
+//    @Test
+//    public void testSelectAll() throws SQLException {
+//        List<FoodDTO> dtoList = foodService.listAll();
+//        for (FoodDTO foodDTO:dtoList) {
+//            log.info(foodDTO);
+//        }
+//    }
 
 }

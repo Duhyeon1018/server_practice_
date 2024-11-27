@@ -3,7 +3,6 @@ package com.busanit501.helloworld.food.service;
 import com.busanit501.helloworld.food.VO.FoodVO;
 import com.busanit501.helloworld.food.dao.FoodDAO;
 import com.busanit501.helloworld.food.dto.FoodDTO;
-import com.busanit501.helloworld.jdbcex.dao.TodoDAO;
 import com.busanit501.helloworld.jdbcex.dto.TodoDTO;
 import com.busanit501.helloworld.jdbcex.util.MapperUtil;
 import com.busanit501.helloworld.jdbcex.vo.TodoVO;
@@ -38,7 +37,7 @@ public enum FoodService {
 
     //1 register(등록)
     //화면에서 등록된 내용이 -> DTO 박스에 담아서 -> 서비스계층에 전달
-    public void register(TodoDTO todoDTO) throws SQLException {
+    public void register(FoodDTO todoDTO) throws SQLException {
         // DAO에서 작업할 때, DB에 직접적인 영향을 주는 객체를 만들었음
         // 그것이 바로 VO , 실제 비즈니스 로직에서만 사용
         // Servlet -> DTO 전달 받은 다음 -> DAO에 전달할 때, 다시 VO로 변환해야함
@@ -63,11 +62,21 @@ public enum FoodService {
 
     // 전체 조회
     public List<FoodDTO> listAll() throws SQLException {
-        List<FoodVO> voList = foodDAO.selectAll();
+        List<FoodVO> voList = FoodDAO.selectAll();
         log.info("voList : " + voList);
 
         List<FoodDTO> foodList = voList.stream().map(vo -> modelMapper.map(vo, FoodDTO.class))
                 .collect(Collectors.toList());
         return foodList;
+    }
+
+    public FoodDTO get(Long tno) throws SQLException {
+        log.info("tno : " + tno);
+        ///  디비에서 하나 조회 결과 받았음.
+        FoodVO foodVO = foodDAO.selectOne(tno);
+        // VO -> DTO 변환 작업.
+        FoodDTO foodDTO = modelMapper.map(foodVO,FoodDTO.class);
+        return foodDTO;
+
     }
 }
