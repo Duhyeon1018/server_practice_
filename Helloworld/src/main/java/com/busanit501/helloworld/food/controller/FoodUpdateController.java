@@ -4,6 +4,7 @@ import com.busanit501.helloworld.food.dto.FoodDTO;
 import com.busanit501.helloworld.food.service.FoodService;
 import com.busanit501.helloworld.jdbcex.dto.TodoDTO;
 import com.busanit501.helloworld.jdbcex.service.TodoService;
+import lombok.extern.log4j.Log4j2;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,10 +15,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-@WebServlet(name = "FoodReg2Controller",urlPatterns = "/food/register2")
-public class FoodReg2Controller extends HttpServlet {
-
+@Log4j2
+@WebServlet(name = "FoodUpdateController",urlPatterns = "/food/update")
+public class FoodUpdateController extends HttpServlet {
     // 서비스를 포함 하기. 의존하기.
     private FoodService foodService = FoodService.INSTANCE;
     // 날짜 포맷팅
@@ -25,23 +25,46 @@ public class FoodReg2Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //화면 전달.
-        request.getRequestDispatcher("/WEB-INF/food/foodReg2.jsp")
-                .forward(request, response);
+
+        try {
+            // 클릭한 게시글 번호를 가지고 와야함.
+            Long tno = Long.parseLong(request.getParameter("tno"));
+            FoodDTO foodDTO = foodService.get(tno);
+            // 화면에 전달하기.
+            request.setAttribute("dto", foodDTO);
+            request.getRequestDispatcher("/WEB-INF/food/foodUpd.jsp")
+                    .forward(request, response);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // 글 작성 로직 처리.
     // 화면에서 데이터 전달받고, -> DTO 담아서, -> 서비스로 전달.
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // PRG 패턴,
+        // POST 처리 후, Redirect , Get 호출,
+        // 무한 post 방지 효과, 화면 전환 효과.
+        // 임시로 담을  DTO 인스턴스 필요함.
 
+        // 넘어온 값의 형태 : 문자열 : "on"
+        String finished = request.getParameter("finished");
+        log.info("finished : " + finished);
+        boolean checkFinished = false;
+        if(finished.equals("on")){
+            checkFinished = true;
+        }
         FoodDTO foodDTO = FoodDTO.builder()
+                .tno(Long.valueOf(request.getParameter("tno")))
                 .title(request.getParameter("title"))
                 .dueDate(LocalDate.parse(request.getParameter("dueDate"),DATE_TIME_FORMATTER))
+                .finished(checkFinished)
                 .build();
+        log.info("foodDTO 수정된 내용: " + foodDTO);
         // Controller -> Service
         try {
-            foodService.register(foodDTO);
+            foodService.update(foodDTO);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

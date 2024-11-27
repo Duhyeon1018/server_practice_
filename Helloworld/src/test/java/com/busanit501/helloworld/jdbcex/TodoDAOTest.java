@@ -57,7 +57,7 @@ public class TodoDAOTest {
     @Test
     public void testList() throws SQLException {
         List<TodoVO> list = todoDAO.selectAll();
-        list.forEach(vo -> System.out.println(vo));
+//        list.forEach(vo -> System.out.println(vo));
     }
 
     //3, 하나 조회 테스트

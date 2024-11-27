@@ -10,6 +10,9 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
+//test 할 때 DATA ,BUILDER ALL, NO 다 넣어줘야함
+
 public class FoodDTO {
     private Long tno;
     private String title;

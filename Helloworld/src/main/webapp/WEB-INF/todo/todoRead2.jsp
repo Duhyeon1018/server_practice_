@@ -11,9 +11,9 @@
     <title>Title</title>
 </head>
 <body>
-<h1>jdbcex 작업 중. tno 번호로 하나 조회하는 화면, 상세보기와 같은 역할. </h1>
+<h1>미니실습 작업 중. fno 번호로 하나 조회하는 화면, 상세보기와 같은 역할. </h1>
 <div>
-    <input type="text" name="tno" value="${dto.tno}" readonly>
+    <input type="text" name="fno" value="${dto.tno}" readonly>
 </div>
 <div>
     <input type="text" name="title" value="${dto.title}" placeholder="제목 입력 해주세요." readonly>

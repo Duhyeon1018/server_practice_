@@ -10,6 +10,9 @@ import java.time.LocalDate;
 //@ToString
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class FoodVO {
     private Long tno;
     private String title;
